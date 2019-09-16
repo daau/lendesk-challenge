@@ -1,8 +1,5 @@
 class User
-  include ActiveModel::Validations
   include ActiveModel::SecurePassword
-  include ActiveModel::Serialization  
-  
   include ActiveHash
 
   attr_accessor :username, :password_digest

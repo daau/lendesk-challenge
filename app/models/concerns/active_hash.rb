@@ -2,6 +2,7 @@ module ActiveHash
   extend ActiveSupport::Concern
   include ActiveModel::AttributeAssignment
   include ActiveModel::Validations
+  include ActiveModel::Serialization
 
   included do
     def initialize(attributes = {})
