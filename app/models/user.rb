@@ -1,6 +1,7 @@
 class User
   include ActiveModel::Validations
   include ActiveModel::SecurePassword
+  include ActiveModel::Serialization  
   
   include ActiveHash
 
@@ -11,4 +12,8 @@ class User
 
   validates :username, length: { in: 4..20 }
   validates :password, length: { minimum: 6 }
+
+  def attributes
+    {'username' => nil, 'password_digest' => nil}
+  end
 end

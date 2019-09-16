@@ -1,6 +1,6 @@
 class Api::SessionsController < ApplicationController
   def create
-    if params[:username].blank? || params[:password].blank?
+    if params[:username].nil? || params[:password].nil?
       render json: {"errors": "invalid input"}, status: :bad_request
       return
     end
@@ -8,7 +8,7 @@ class Api::SessionsController < ApplicationController
     @user = User.find(params[:username])
 
     if @user && @user.authenticate(params[:password])
-      render json: @user
+      render json: @user.serializable_hash
     else
       render json: {"errors": "invalid password"}, status: :unauthorized
     end
