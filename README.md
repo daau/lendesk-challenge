@@ -24,28 +24,28 @@ The following endpoints are available:
 
 Endpoint | Verb | Parameters | Description
 ------------ | ------------- | ------------- | -------------
-http://api.lvh.me:3000/users | POST | *username:string, password:string* | Register a new user
+http://api.lvh.me:3000/users | POST | *username:string, password:string* | Create a new user
 http://api.lvh.me:3000/sessions | POST | *username:string, password:string* | Authenticate a user
 
 **Examples: Creating a user**
 ```
-curl -v -d '{"username":"daau", "password":"hi"}' -H "Content-Type: application/json" POST http://api.lvh.me:3000/users
-< {"password":["is too short (minimum is 6 characters)"]}
+$ curl -v -d '{"username":"daau", "password":"hi"}' -H "Content-Type: application/json" POST http://api.lvh.me:3000/users
+< STATUS 422 {"password":["is too short (minimum is 6 characters)"]}
 
-curl -v -d '{"username":"daau", "password":"hunter2"}' -H "Content-Type: application/json" POST http://api.lvh.me:3000/users
-< {"username":"daau","password_digest":"$2a$12$4vE34GO5cy0K4OxbiFreluk3knxe0ssg.h/gftE4PC.bl8O1ocIAK"}
+$ curl -v -d '{"username":"daau", "password":"hunter2"}' -H "Content-Type: application/json" POST http://api.lvh.me:3000/users
+< STATUS 201 {"username":"daau","password_digest":"$2a$12$4vE34GO5cy0K4OxbiFreluk3knxe0ssg.h/gftE4PC.bl8O1ocIAK"}
 
-curl -v -d '{"username":"daau", "password":"hunter2"}' -H "Content-Type: application/json" POST http://api.lvh.me:3000/users
-{"username":["has already been taken"]}
+$ curl -v -d '{"username":"daau", "password":"hunter2"}' -H "Content-Type: application/json" POST http://api.lvh.me:3000/users
+< STATUS 422 {"username":["has already been taken"]}
 ```
 
 **Examples: Authenticating a user**
 ```
-curl -v -d '{"username":"daau", "password":"foobar"}' -H "Content-Type: application/json" POST http://api.lvh.me:3000/sessions
-< {"errors":"invalid password"}
+$ curl -v -d '{"username":"daau", "password":"foobar"}' -H "Content-Type: application/json" POST http://api.lvh.me:3000/sessions
+< STATUS 401 {"errors":"invalid password"}
 
-curl -v -d '{"username":"daau", "password":"hunter2"}' -H "Content-Type: application/json" POST http://api.lvh.me:3000/sessions
-< {"username":"daau","password_digest":"$2a$12$4vE34GO5cy0K4OxbiFreluk3knxe0ssg.h/gftE4PC.bl8O1ocIAK"}
+$ curl -v -d '{"username":"daau", "password":"hunter2"}' -H "Content-Type: application/json" POST http://api.lvh.me:3000/sessions
+< STATUS 200 {"username":"daau","password_digest":"$2a$12$4vE34GO5cy0K4OxbiFreluk3knxe0ssg.h/gftE4PC.bl8O1ocIAK"}
 ```
 
 ## Discussion
@@ -53,13 +53,13 @@ Due to time considerations, I kept the implementation as minimal as possible by 
 
 1. **ActiveModel::Validations**, to handle validations of fields
 2. **ActiveModel::SecurePassword**, to handle the encryption of passwords and authentication of users
-3. **ActiveModel::Serialization**, to handle serialization of the model to json
-4. **ActiveModel::AttributeAssignment**, to simplify attribute assignments
+3. **ActiveModel::Serialization**, to handle serialization to json
+4. **ActiveModel::AttributeAssignment**, for a cleaner attribute assignment interface
 
 In addition, the following modules were wrriten and included in *User* for further functionality
 
 1. **ActiveHash**, a minimal ORM for Redis with some additional helper methods
-2. **UniqueKeyValidator**, which validates that certain attributes are unique (in this case, it's used to ensure the username attribute is unique)
+2. **UniqueKeyValidator**, which validates that certain attributes are unique (in this case, it's used to ensure the *username* attribute is unique)
 
 
 ## Further improvements
@@ -70,7 +70,8 @@ Due to time considerations, some functionality has been left out. In a productio
 4. HTTPS enforcement to prevent requests from being sniffed
 5. API rate limiting (for example, using Rack::Attack)
 6. Extraction ActiveHash into a gem and write documentation for it (if we really need to use Redis)
-7. Model and integration tests
-8. More descriptive error messages (which warrants further business / technical discussion)
-9. More appropriate json responses (which warrants further business / technical discussion)
-10. Uniqueness identification for each User record in Redis (eg, a sequentailly increasing ID)
+7. Many improvements to ActiveHash (which warrents further technical discussion)
+8. Model and integration tests
+9. More descriptive error messages (which warrants further business / technical discussion)
+10. More appropriate json responses (which warrants further business / technical discussion)
+11. Uniqueness identification for each User record in Redis (eg, a sequentailly increasing ID)
