@@ -75,3 +75,4 @@ Due to time considerations, some functionality has been left out. In a productio
 9. More descriptive error messages (which warrants further business / technical discussion)
 10. More appropriate json responses (which warrants further business / technical discussion)
 11. Uniqueness identification for each User record in Redis (eg, a sequentailly increasing ID)
+12. Typical authentication security stuff (password confirmation, password reset, X login attempts lockout, IP logging, unusual activity notification, etc...)
